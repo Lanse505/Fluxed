@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * FluxMapper generates Perlin-like noise values for a 2D space using a deterministic RandomSource.
- * Results are cached to avoid recomputation and improve performance.
+ * Results are cached to avoid computation and improve performance.
  */
 public class FluxMapper
 {
@@ -27,7 +27,7 @@ public class FluxMapper
     this.noiseCache = CacheBuilder.newBuilder().maximumSize(50_000).expireAfterAccess(30, TimeUnit.MINUTES).build();
   }
 
-  private Float getNoise(ChunkPos pos)
+  public Float getNoise(ChunkPos pos, float frequency)
   {
     if (noiseCache.getIfPresent(pos) != null)
     {
@@ -36,18 +36,6 @@ public class FluxMapper
     float val = noise.noise(pos.x, pos.z);
     noiseCache.put(pos, val);
     return val;
-  }
-
-  public float getSmoothedNoise(ChunkPos pos)
-  {
-    int[][] offsets = {{0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-    float total = 0f;
-    for (int[] offset : offsets) {
-      int x = pos.x + offset[0];
-      int z = pos.z + offset[1];
-      total += getNoise(new ChunkPos(x, z));
-    }
-    return total / offsets.length;
   }
 
 }

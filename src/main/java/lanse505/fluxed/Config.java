@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package lanse505.fluxed;
 
 import java.util.List;
 import java.util.Set;
